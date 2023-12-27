@@ -1,3 +1,5 @@
+--Updates existing rows and inserts new records. 
+
 -- Create or alter the stored procedure
 ALTER PROCEDURE [dbo].[MergeData_Update]
 AS
