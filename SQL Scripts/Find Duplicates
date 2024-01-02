@@ -1,0 +1,10 @@
+SELECT
+  -- Enter all primary keys. In this example, only 'ID' is included, but for your table, there might be multiple primary keys that need to be added and grouped by.
+  ID,
+  COUNT(*) AS occurrence_count
+FROM
+  table
+GROUP BY
+  ID
+HAVING
+  COUNT(*) > 1;
