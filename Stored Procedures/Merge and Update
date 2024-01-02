@@ -1,0 +1,52 @@
+--Updates existing rows and inserts new records. 
+
+-- Create or alter the stored procedure
+ALTER PROCEDURE [dbo].[MergeData_Update]
+AS
+BEGIN
+    -- Merge data from staging table into target table
+    MERGE INTO [dbo].[TargetTable] AS target
+    USING (
+        -- Select data from staging table with additional ETL metadata
+        SELECT
+            [Col1],
+            [Col2],
+            [Col3],
+            [Col4],
+            [Col5],
+            GETDATE() AS ETL_UPD_DT
+        FROM
+            [dbo].[StagingTable]
+    ) AS source
+    ON
+        target.[PrimaryKey] = source.[PrimaryKey]
+
+    -- When there is a match, update the existing record
+    WHEN MATCHED THEN
+        UPDATE SET
+            target.[Col1] = source.[Col1],
+            target.[Col2] = source.[Col2],
+            target.[Col3] = source.[Col3],
+            target.[Col4] = source.[Col4],
+            target.[Col5] = source.[Col5],
+            target.[ETL_UPD_DT] = source.[ETL_UPD_DT]
+
+    -- When there is no match, insert a new record
+    WHEN NOT MATCHED THEN
+        INSERT (
+            [Col1],
+            [Col2],
+            [Col3],
+            [Col4],
+            [Col5],
+            [ETL_UPD_DT]
+        ) VALUES (
+            source.[Col1],
+            source.[Col2],
+            source.[Col3],
+            source.[Col4],
+            source.[Col5],
+            source.[ETL_UPD_DT]
+        );
+
+END;
