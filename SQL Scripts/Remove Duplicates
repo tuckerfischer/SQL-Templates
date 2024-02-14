@@ -1,0 +1,9 @@
+-- Remove duplicates from table base on row id and taking the lastupdatedate
+
+WITH CTE AS (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY ID ORDER BY LastUpdateDate DESC) AS RowNumber
+    FROM YourTableName
+)
+DELETE FROM CTE
+WHERE RowNumber > 1;
